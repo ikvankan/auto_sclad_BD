@@ -1,0 +1,56 @@
+﻿@model sclad.Models.ItemType
+<form method="post" asp-action="Edit">
+    <div class="border p-3">
+        <input asp-for="Id" hidden />
+        <div class="mb-3 row">
+            <h2 class="text-info pl-3"> Edit ItemType</h2>
+        </div>
+        <div class="row">
+            <div class="col-8">
+                <div class="mb-3 row">
+                    <div class="col-4">
+                        <label asp-for="Name"></label>
+                    </div>
+                    <div class="col-8">
+                        <input asp-for="Name" class="form-control" />
+                        <span asp-validation-for="Name" class="text-danger"></span>
+                    </div>
+
+                </div>
+                <div class="mb-3 row">
+                    <div class="col-4">
+                        <label asp-for="price"></label>
+                    </div>
+                    <div class="col-8">
+                        <input type="number" asp-for="price" class="form-control" />
+                        <span asp-validation-for="price" class="text-danger"></span>
+                    </div>
+
+                </div>
+                <div class="mb-3 row">
+                    <div class="col-8 offset-4 row">
+
+                        <div class="col">
+                            <input type="submit" class="btn btn-info w-100" value="Обновить" />
+                        </div>
+                        <div class="col">
+                            <a asp-controller="ItemType" asp-action="Index" class="btn btn-success w-100">
+                                Назад
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-4">
+                @* Keep this empty *@
+            </div>
+        </div>
+    </div>
+</form>
+@section Scripts{
+
+    @{
+        <partial name="_ValidationScriptsPartial" />
+    }
+    
+}

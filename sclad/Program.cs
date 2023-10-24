@@ -1,5 +1,8 @@
 using sclad.Data;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Localization;
+using System.Globalization;
+
 namespace sclad
 {
     public class Program
@@ -15,10 +18,21 @@ namespace sclad
             options.UseSqlServer(
                 builder.Configuration.GetConnectionString("Defaultconnection")));
 
-            var app = builder.Build();
+
+
+            var supportedCultures = new[] { new CultureInfo("en-US") };
+            builder.Services.Configure<RequestLocalizationOptions>(options =>
+            {
+                options.DefaultRequestCulture = new RequestCulture("en-US");
+                options.SupportedCultures = supportedCultures;
+                options.SupportedUICultures = supportedCultures;
+            });
 
             
-            
+            var app = builder.Build();
+            app.UseRequestLocalization();
+
+
 
 
             // Configure the HTTP request pipeline.
