@@ -11,5 +11,6 @@ namespace sclad.Data
         }
         public DbSet<ItemType> ItemType { get; set; }
         public DbSet<Punkt> Punkt { get; set; }
+        public DbSet<Item> Item { get; set; }
     }
 }
