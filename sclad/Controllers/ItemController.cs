@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc.Rendering;
 using sclad.Data;
 using sclad.Models;
+using sclad.Models.ViewModels;
 
 namespace sclad.Controllers
 {
@@ -24,26 +25,39 @@ namespace sclad.Controllers
         //GET-UPSERT
         public IActionResult Upsert(int? Id)
         {
-            IEnumerable<SelectListItem> ItemTypeDropDown = _db.ItemType.Select(i => new SelectListItem
+            //IEnumerable<SelectListItem> ItemTypeDropDown = _db.ItemType.Select(i => new SelectListItem
+            //{
+            //    Text = i.Name,
+            //    Value = i.Id.ToString()
+            //});
+            //ViewBag.ItemTypeDropDown = ItemTypeDropDown;
+            //Item item = new Item();
+
+
+            ItemVM itemVM = new ItemVM()
             {
-                Text = i.Name,
-                Value = i.Id.ToString()
-            });
-            ViewBag.ItemTypeDropDown = ItemTypeDropDown;
-            Item item = new Item();
+                Item = new Item(),
+                ItemTypeSelectLIst = _db.ItemType.Select(i => new SelectListItem
+                {
+                    Text = i.Name,
+                    Value = i.Id.ToString()
+                })
+            };
+
+
             if (Id == null)
             {
                 //Создаем новый
-                return View(item);
+                return View(itemVM);
             }
             else
             {
-                item = _db.Item.Find(Id);
-                if(item == null)
+                itemVM.Item = _db.Item.Find(Id);
+                if(itemVM.Item == null)
                 {
                     return NotFound();
                 }
-                return View(item);
+                return View(itemVM);
             }
             
         }

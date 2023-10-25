@@ -1,13 +1,13 @@
-﻿@model sclad.Models.Item
+﻿@model sclad.Models.ViewModels.ItemVM
 
 @{
     var title = "Create Item";
 }
 <form method="post" asp-action="Upsert" enctype="multipart/form-data">
-    @if (Model.Id != 0)
+    @if (Model.Item.Id != 0)
     {
         title = "Edit Item";
-        <input asp-for="Id" hidden />
+        <input asp-for="Item.Id" hidden />
     }
     
     <div class="border p-3">
@@ -19,63 +19,63 @@
             <div class="col-8">
                 <div class="mb-3 row">
                     <div class="col-4">
-                        <label asp-for="Name"></label>
+                        <label asp-for="Item.Name"></label>
                     </div>
                     <div class="col-8">
-                        <input asp-for="Name" class="form-control" />
-                        <span asp-validation-for="Name" class="text-danger"></span>
+                        <input asp-for="Item.Name" class="form-control" />
+                        <span asp-validation-for="Item.Name" class="text-danger"></span>
                     </div>
 
                 </div>
                 <div class="mb-3 row">
                     <div class="col-4">
-                        <label asp-for="Weight"></label>
+                        <label asp-for="Item.Weight"></label>
                     </div>
                     <div class="col-8">
-                        <input type="number" asp-for="Weight" class="form-control" />
-                        <span asp-validation-for="Weight" class="text-danger"></span>
+                        <input type="number" asp-for="Item.Weight" class="form-control" />
+                        <span asp-validation-for="Item.Weight" class="text-danger"></span>
                     </div>
 
                 </div>
                 <div class="mb-3 row">
                     <div class="col-4">
-                        <label asp-for="TotalCost"></label>
+                        <label asp-for="Item.TotalCost"></label>
                     </div>
                     <div class="col-8">
-                        <input type="number" asp-for="TotalCost" class="form-control" />
-                        <span asp-validation-for="TotalCost" class="text-danger"></span>
+                        <input type="number" asp-for="Item.TotalCost" class="form-control" />
+                        <span asp-validation-for="Item.TotalCost" class="text-danger"></span>
                     </div>
 
                 </div>
                 <div class="mb-3 row">
                     <div class="col-4">
-                        <label asp-for="ItemByUser"></label>
+                        <label asp-for="Item.ItemByUser"></label>
                     </div>
                     <div class="col-8">
-                        <input  asp-for="ItemByUser" class="form-control" />
-                        <span asp-validation-for="ItemByUser" class="text-danger"></span>
+                        <input asp-for="Item.ItemByUser" class="form-control" />
+                        <span asp-validation-for="Item.ItemByUser" class="text-danger"></span>
                     </div>
 
                 </div>
                 <div class="mb-3 row">
                     <div class="col-4">
-                        <label asp-for="Discription"></label>
+                        <label asp-for="Item.Discription"></label>
                     </div>
                     <div class="col-8">
-                        <input asp-for="Discription" class="form-control" />
-                        <span asp-validation-for="Discription" class="text-danger"></span>
+                        <input asp-for="Item.Discription" class="form-control" />
+                        <span asp-validation-for="Item.Discription" class="text-danger"></span>
                     </div>
 
                 </div>
                 <div class="mb-3 row">
                     <div class="col-4">
-                        <label asp-for="ItemTypeId"></label>
+                        <label asp-for="Item.ItemTypeId"></label>
                     </div>
                     <div class="col-8">
-                        <select asp-for="ItemTypeId" asp-items="@ViewBag.ItemTypeDropDown" class="form-control">
+                        <select asp-for="Item.ItemTypeId" asp-items="@Model.ItemTypeSelectLIst" class="form-select">
                             <option disabled selected>--Выберите тип товара--</option>
                         </select>
-                        <span asp-validation-for="ItemTypeId" class="text-danger"></span>
+                        <span asp-validation-for="Item.ItemTypeId" class="text-danger"></span>
                     </div>
 
                 </div>
@@ -93,7 +93,7 @@
                     <div class="col-8 offset-4 row">
 
                         <div class="col">
-                            @if (Model.Id != 0)
+                            @if (Model.Item.Id != 0)
                             {
                                 //Обновить товар
                                 <input type="submit" class="btn btn-info w-100" value="Обновить" />
