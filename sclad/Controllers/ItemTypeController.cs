@@ -50,6 +50,28 @@ namespace sclad.Controllers
             _db.SaveChanges();
             return RedirectToAction("Index");
         }
+
+        //GET-DELETE
+        public IActionResult Delete(int? Id)
+        {
+            if (Id == null) { return NotFound(); }
+            var obj = _db.ItemType.Find(Id);
+            if (obj == null) { return NotFound(); }
+            return View(obj);
+        }
+
+
+        //POST-DELITE
+        [HttpPost]//Action метод типа пост дададада
+        [ValidateAntiForgeryToken]//Токен от взлома
+        public IActionResult DeletePost(int? Id)
+        {
+            var obj = _db.ItemType.Find(Id);
+            if (obj == null) { return NotFound(); }
+            _db.ItemType.Remove(obj);
+            _db.SaveChanges();
+            return RedirectToAction("Index");
+        }
     }
 }
 
