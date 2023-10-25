@@ -8,7 +8,7 @@
         </div>
         <div class="col-6 text-end" >
             <a asp-controller="ItemType" asp-action="Create" class="btn btn-primary">
-                Create new Item Type
+                <i class="fa-sharp fa-solid fa-plus fa-beat"></i> &nbsp; Create new Item Type
             </a>
             
         </div>
@@ -36,11 +36,11 @@
                         <td width="30%">@obj.price</td>
                         <td class="text-center">
                             <div class="w-75 btn-group" role="group">
-                                <a asp-controller="ItemType" asp-route-Id="@obj.Id" asp-action="Edit" class="btn btn-primary mx-2">
-                                    Edit
+                                <a asp-controller="ItemType" asp-route-Id="@obj.Id" asp-action="Edit" class="btn btn-primary ">
+                                    <i class="fa-solid fa-pen-to-square"></i>
                                 </a>
-                                <a asp-controller="ItemType" asp-route-Id="@obj.Id" asp-action="Delete" class="btn btn-danger mx-2">
-                                    Delete
+                                <a asp-controller="ItemType" asp-route-Id="@obj.Id" asp-action="Delete" class="btn btn-danger ">
+                                    <i class="fa-solid fa-trash"></i>
                                 </a>
                             </div>
                         </td>
