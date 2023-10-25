@@ -9,9 +9,11 @@ namespace sclad.Controllers
     public class ItemController : Controller
     {
         private readonly ApplicationDbContext _db;
-        public ItemController(ApplicationDbContext db)
+        private readonly IWebHostEnvironment _webHostEnvironment;
+        public ItemController(ApplicationDbContext db, IWebHostEnvironment webHostEnvironment)
         {
             _db = db;
+            _webHostEnvironment = webHostEnvironment;
         }
         public IActionResult Index()
         {
@@ -64,9 +66,32 @@ namespace sclad.Controllers
         //POST-UPSERT
         [HttpPost]//Action метод типа пост дададада
         [ValidateAntiForgeryToken]//Токен от взлома
-        public IActionResult Upsert(ItemType obj)
+        public IActionResult Upsert(ItemVM itemVM)
         {
-            _db.ItemType.Add(obj);
+            var files = HttpContext.Request.Form.Files;
+            string webRootPath = _webHostEnvironment.WebRootPath;
+
+            if(itemVM.Item.Id == 0)
+            {
+                //создаем
+                string upload = webRootPath + WC.ImagePath;
+                string fileName = Guid.NewGuid().ToString();
+                string extension = Path.GetExtension(files[0].FileName);
+
+
+                using(var fileStream = new FileStream(Path.Combine(upload, fileName + extension), FileMode.Create))
+                {
+                    files[0].CopyTo(fileStream);
+                }
+
+                itemVM.Item.Img = fileName + extension;
+
+                _db.Item.Add(itemVM.Item);
+            }
+            else
+            {
+                //обновляем
+            }
             _db.SaveChanges();
             return RedirectToAction("Index");
         }
