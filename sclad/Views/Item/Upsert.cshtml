@@ -81,6 +81,18 @@
                 </div>
                 <div class="mb-3 row">
                     <div class="col-4">
+                        <label asp-for="Item.PunktId"></label>
+                    </div>
+                    <div class="col-8">
+                        <select asp-for="Item.PunktId" asp-items="@Model.PunktSelectLIst" class="form-select">
+                            <option disabled selected>--Выберите пункт нахождения товара--</option>
+                        </select>
+                        <span asp-validation-for="Item.PunktId" class="text-danger"></span>
+                    </div>
+
+                </div>
+                <div class="mb-3 row">
+                    <div class="col-4">
                         Image
                     </div>
                     <div class="col-8">
@@ -106,7 +118,7 @@
                             
                         </div>
                         <div class="col">
-                            <a asp-controller="ItemType" asp-action="Index" class="btn btn-success w-100">
+                            <a asp-controller="Item" asp-action="Index" class="btn btn-success w-100">
                                 <i class="fa-solid fa-right-from-bracket"></i> &nbsp; Назад
                             </a>
                         </div>
@@ -115,7 +127,11 @@
             </div>
             <div class="col-4">
                 @* Keep this empty *@
-                <img src="@WC.ImagePath@Model.Item.Img"  width="100%" style="border-radius:5px; border:1px solid #bbb"/>
+                @if (@Model.Item.Id != 0)
+                {
+                    <img src="@WC.ImagePath@Model.Item.Img" width="100%" style="border-radius:5px; border:1px solid #bbb" />
+                }
+                
             </div>
         </div>
     </div>

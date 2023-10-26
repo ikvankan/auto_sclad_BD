@@ -1,0 +1,124 @@
+﻿@model sclad.Models.Item
+
+<form method="post" asp-action="Delete" >
+    
+
+    <div class="border p-3">
+
+        <div class="mb-3 row">
+            <h2 class="text-info pl-3"> Delete Item</h2>
+        </div>
+        <div class="row">
+            <div class="col-8">
+                <div class="mb-3 row">
+                    <div class="col-4">
+                        <label asp-for="Name"></label>
+                    </div>
+                    <div class="col-8">
+                        <input asp-for="Name" disabled class="form-control" />
+                        
+                    </div>
+
+                </div>
+                <div class="mb-3 row">
+                    <div class="col-4">
+                        <label asp-for="Weight"></label>
+                    </div>
+                    <div class="col-8">
+                        <input type="number" disabled asp-for="Weight" class="form-control" />
+                        
+                    </div>
+
+                </div>
+                <div class="mb-3 row">
+                    <div class="col-4">
+                        <label asp-for="TotalCost"></label>
+                    </div>
+                    <div class="col-8">
+                        <input type="number" disabled asp-for="TotalCost" class="form-control" />
+                        
+                    </div>
+
+                </div>
+                <div class="mb-3 row">
+                    <div class="col-4">
+                        <label asp-for="ItemByUser"></label>
+                    </div>
+                    <div class="col-8">
+                        <input asp-for="ItemByUser" disabled class="form-control" />
+                        
+                    </div>
+
+                </div>
+                <div class="mb-3 row">
+                    <div class="col-4">
+                        <label asp-for="Discription"></label>
+                    </div>
+                    <div class="col-8">
+                        <textarea asp-for="Discription" class="form-control summernote"></textarea>
+                        
+                    </div>
+
+                </div>
+                <div class="mb-3 row">
+                    <div class="col-4">
+                        <label asp-for="ItemTypeId"></label>
+                    </div>
+                    <div class="col-8">
+                        <input  disabled asp-for="ItemType.Name" class="form-control" />
+                        
+                    </div>
+
+                </div>
+                <div class="mb-3 row">
+                    <div class="col-4">
+                        <label asp-for="PunktId"></label>
+                    </div>
+                    <div class="col-8">
+                        <input disabled asp-for="Punkt.Name" class="form-control" />
+
+                    </div>
+
+                </div>
+                
+                <div class="mb-3 row">
+                    <div class="col-8 offset-4 row">
+
+                        <div class="col">
+                            @*//удаление*@
+                                <button type="submit" class="btn btn-danger w-100">Удалить</button>
+                        </div>
+                        <div class="col">
+                            <a asp-controller="Item" asp-action="Index" class="btn btn-success w-100">
+                                <i class="fa-solid fa-right-from-bracket"></i> &nbsp; Назад
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-4">
+                @* Keep this empty *@
+                @if (@Model.Id != 0)
+                {
+                    <img src="@WC.ImagePath@Model.Img" width="100%" style="border-radius:5px; border:1px solid #bbb" />
+                }
+
+            </div>
+        </div>
+    </div>
+</form>
+@section Scripts{
+
+    @{
+        <partial name="_ValidationScriptsPartial" />
+    }
+    <script>
+        $(document).ready(function () {
+            $('.summernote').summernote({
+                height: 250,
+                disable:true
+            });
+        });
+        
+    </script>
+}

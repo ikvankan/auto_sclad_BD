@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 using sclad.Data;
 using sclad.Models;
 using sclad.Models.ViewModels;
@@ -21,6 +22,7 @@ namespace sclad.Controllers
             foreach(var obj in objList)
             {
                 obj.ItemType = _db.ItemType.FirstOrDefault(u => u.Id == obj.ItemTypeId);
+                obj.Punkt = _db.Punkt.FirstOrDefault(u => u.Id == obj.PunktId);
             }
             return View(objList);
         }
@@ -40,6 +42,11 @@ namespace sclad.Controllers
             {
                 Item = new Item(),
                 ItemTypeSelectLIst = _db.ItemType.Select(i => new SelectListItem
+                {
+                    Text = i.Name,
+                    Value = i.Id.ToString()
+                }),
+                PunktSelectLIst = _db.Punkt.Select(i => new SelectListItem
                 {
                     Text = i.Name,
                     Value = i.Id.ToString()
@@ -91,7 +98,34 @@ namespace sclad.Controllers
             else
             {
                 //обновляем
+                var objFromDb = _db.Item.AsNoTracking().FirstOrDefault(u=>u.Id== itemVM.Item.Id);
+                if (files.Count > 0)
+                {
+                    string upload = webRootPath + WC.ImagePath;
+                    string fileName = Guid.NewGuid().ToString();
+                    string extension = Path.GetExtension(files[0].FileName);
+
+                    var oldFile= Path.Combine(upload, objFromDb.Img);
+
+                    if (System.IO.File.Exists(oldFile))
+                    {
+                        System.IO.File.Delete(oldFile);
+                    }
+
+                    using (var fileStream = new FileStream(Path.Combine(upload, fileName + extension), FileMode.Create))
+                    {
+                        files[0].CopyTo(fileStream);
+                    }
+                    itemVM.Item.Img = fileName+extension;
+                }
+                else
+                {
+                    itemVM.Item.Img = objFromDb.Img;
+                }
+                _db.Item.Update(itemVM.Item);
             }
+
+
             _db.SaveChanges();
             return RedirectToAction("Index");
         }
@@ -100,20 +134,32 @@ namespace sclad.Controllers
         public IActionResult Delete(int? Id)
         {
             if (Id == null) { return NotFound(); }
+            Item item = _db.Item.Include(u => u.ItemType).Include(u => u.Punkt).FirstOrDefault(u=>u.Id==Id);
+            //item.ItemType = _db.ItemType.Find(Id);
             var obj = _db.ItemType.Find(Id);
-            if (obj == null) { return NotFound(); }
-            return View(obj);
+            if (item == null) { return NotFound(); }
+            return View(item);
         }
 
 
         //POST-DELITE
-        [HttpPost]//Action метод типа пост дададада
+        
+        [HttpPost, ActionName("Delete")]//Action метод типа пост дададада,ну и имя для метода чтобы асп понимал как к нему лучше обращатся
         [ValidateAntiForgeryToken]//Токен от взлома
         public IActionResult DeletePost(int? Id)
         {
-            var obj = _db.ItemType.Find(Id);
+            var obj = _db.Item.Find(Id);
             if (obj == null) { return NotFound(); }
-            _db.ItemType.Remove(obj);
+
+            string upload = _webHostEnvironment.WebRootPath + WC.ImagePath;
+            var oldFile = Path.Combine(upload, obj.Img);
+
+            if (System.IO.File.Exists(oldFile))
+            {
+                System.IO.File.Delete(oldFile);
+            }
+
+            _db.Item.Remove(obj);
             _db.SaveChanges();
             return RedirectToAction("Index");
         }
