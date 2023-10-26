@@ -2,6 +2,7 @@ using sclad.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Localization;
 using System.Globalization;
+using Microsoft.AspNetCore.Identity;
 
 namespace sclad
 {
@@ -23,7 +24,7 @@ namespace sclad
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
             options.UseSqlServer(
                 builder.Configuration.GetConnectionString("Defaultconnection")));
-
+            builder.Services.AddIdentity<IdentityUser,IdentityRole>().AddDefaultTokenProviders().AddDefaultUI().AddEntityFrameworkStores<ApplicationDbContext>();
 
 
             var supportedCultures = new[] { new CultureInfo("en-US") };
@@ -54,10 +55,16 @@ namespace sclad
 
             app.UseRouting();
             
+            app.UseAuthentication();
+
             app.UseAuthorization();
 
             app.UseSession();
-
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapRazorPages();
+            }
+            );
             app.MapControllerRoute(
                 name: "default",
                 pattern: "{controller=Home}/{action=Index}/{id?}");
