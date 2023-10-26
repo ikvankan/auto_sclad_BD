@@ -28,7 +28,16 @@ namespace sclad.Controllers
             };
             return View(homeVM);
         }
+        public IActionResult Details(int Id)
+        {
+            DetailsVM DetailsVM = new DetailsVM()
+            { 
+                Item = _db.Item.Include(u => u.ItemType).Include(u => u.Punkt).Where(u => u.Id == Id).FirstOrDefault(),
+                ExistInCart = false
 
+            };
+            return View(DetailsVM);
+        }
         public IActionResult Privacy()
         {
             return View();
