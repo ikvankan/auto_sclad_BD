@@ -55,7 +55,7 @@
                         <label asp-for="Discription"></label>
                     </div>
                     <div class="col-8">
-                        <textarea asp-for="Discription" class="form-control summernote"></textarea>
+                        <textarea asp-for="Discription" style="resize:none" class="form-control summernote"></textarea>
                         
                     </div>
 
@@ -115,10 +115,12 @@
     <script>
         $(document).ready(function () {
             $('.summernote').summernote({
-                height: 250,
-                disable:true
+                height: 250
             });
+            $('.summernote').summernote('disable');
+
         });
         
     </script>
+    
 }
