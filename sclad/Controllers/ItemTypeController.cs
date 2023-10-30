@@ -1,9 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using sclad.Data;
 using sclad.Models;
+using System.Data;
 
 namespace sclad.Controllers
 {
+    [Authorize(Roles = WC.AdminRole)]
     public class ItemTypeController : Controller
     {
         private readonly ApplicationDbContext _db;

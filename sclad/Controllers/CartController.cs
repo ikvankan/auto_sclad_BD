@@ -1,10 +1,12 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using sclad.Data;
 using sclad.Models;
 using sclad.Models.ViewModels;
 using sclad.Utility;
 using System.Security.Claims;
+using System.Text;
 
 namespace sclad.Controllers
 {
@@ -12,11 +14,15 @@ namespace sclad.Controllers
     public class CartController : Controller
     {
         private readonly ApplicationDbContext _db;
+        private readonly IWebHostEnvironment _webHostEnvironment;
+        private IEmailSender _emailSender;
         [BindProperty]
         public ItemUserVM ItemUserVM { get; set; }
-        public CartController(ApplicationDbContext db)
+        public CartController(ApplicationDbContext db, IWebHostEnvironment webHostEnvironment, IEmailSender emailSender)
         {
             _db = db;
+            _webHostEnvironment = webHostEnvironment;
+            _emailSender = emailSender;
         }
         public IActionResult Index()
         {
@@ -75,7 +81,7 @@ namespace sclad.Controllers
             ItemUserVM = new ItemUserVM()
             {
                 ApplicationUser = _db.ApplicationUser.FirstOrDefault(u => u.Id == claim.Value),
-                ItemList = itemList
+                ItemList = itemList.ToList()
             };
 
             return View(ItemUserVM);
@@ -88,32 +94,39 @@ namespace sclad.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [ActionName("Summary")]
-        public IActionResult SummaryPost(/*ItemUserVM temUserVM*/)//так как есть атрибут [BindProperty] оно доступно и так
+        public async Task<IActionResult> SummaryPost(/*ItemUserVM temUserVM*/)//так как есть атрибут [BindProperty] оно доступно и так
         {
-            var claimsIdentity = (ClaimsIdentity)User.Identity;
-            var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
+            var PathToTemplate = _webHostEnvironment.WebRootPath + Path.DirectorySeparatorChar.ToString()
+                + "templates" + Path.DirectorySeparatorChar.ToString() +
+                "Inquiry.html";
 
-
-
-            List<ShoppingCart> shoppingCartList = new List<ShoppingCart>();
-            if (HttpContext.Session.Get<IEnumerable<ShoppingCart>>(WC.SessionCart).Count() > 0 &&
-                HttpContext.Session.Get<IEnumerable<ShoppingCart>>(WC.SessionCart).Count() != null)
+            var subject = "new Inquiry";
+            string HtmlBody = "";
+            using(StreamReader sr  = System.IO.File.OpenText(PathToTemplate))
             {
-                shoppingCartList = HttpContext.Session.Get<List<ShoppingCart>>(WC.SessionCart);
+                HtmlBody= sr.ReadToEnd();
             }
-            List<int> itemInCart = shoppingCartList.Select(i => i.ItemId).ToList();
-            IEnumerable<Item> itemList = _db.Item.Where(u => itemInCart.Contains(u.Id));
-            foreach (var obj in itemList)
-            {
-                obj.ItemType = _db.ItemType.FirstOrDefault(u => u.Id == obj.ItemTypeId);
-                obj.Punkt = _db.Punkt.FirstOrDefault(u => u.Id == obj.PunktId);
-            }
+            /* 
+            name {0}
+            Email{1}
+            Phone{2}
+            Items{3}
+            */
 
-            ItemUserVM = new ItemUserVM()
+            StringBuilder ItemListSB = new StringBuilder();
+            foreach(var item in ItemUserVM.ItemList)
             {
-                ApplicationUser = _db.ApplicationUser.FirstOrDefault(u => u.Id == claim.Value),
-                ItemList = itemList
-            };
+                ItemListSB.Append($" - Name: {item.Name} <span style='font-size:14px;'> (ID: {item.Id})</span><br />");
+            }
+            string messageBody = string.Format(HtmlBody,
+                ItemUserVM.ApplicationUser.FullName,
+                ItemUserVM.ApplicationUser.Email,
+                ItemUserVM.ApplicationUser.PhoneNumber,
+                ItemListSB.ToString());
+
+
+            await _emailSender.SendEmailAsync(WC.EmailAdmin,subject,messageBody);
+
 
             return RedirectToAction(nameof(InquiryConfirmation));
         }
@@ -141,15 +154,6 @@ namespace sclad.Controllers
             shoppingCartList.Remove(shoppingCartList.Where(u=>u.ItemId == Id).FirstOrDefault());
             HttpContext.Session.Set(WC.SessionCart, shoppingCartList);
             return RedirectToAction(nameof(Index));
-
-            List<int> itemInCart = shoppingCartList.Select(i => i.ItemId).ToList();
-            IEnumerable<Item> itemList = _db.Item.Where(u => itemInCart.Contains(u.Id));
-            foreach (var obj in itemList)
-            {
-                obj.ItemType = _db.ItemType.FirstOrDefault(u => u.Id == obj.ItemTypeId);
-                obj.Punkt = _db.Punkt.FirstOrDefault(u => u.Id == obj.PunktId);
-            }
-            return View(itemList);
         }
     }
 }

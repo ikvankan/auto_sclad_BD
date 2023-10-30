@@ -57,14 +57,14 @@
                                         <span class="text-info">Summary:</span>
                                     </h4>
                                     <ul class="list-group mb-3">
-                                        @foreach(var obj in Model.ItemList)
+                                        @for(int i = 0; i < Model.ItemList.Count(); i++)
                                         {
-                                            <input type="hidden" asp-for="@obj.Name"/>
-                                            <input type="hidden" asp-for="@obj.Id" />
+                                        <input type="hidden" asp-for="@Model.ItemList[i].Name"/>
+                                            <input type="hidden" asp-for="@Model.ItemList[i].Id" />
                                             <li class="list-group-item d-flex justify-content-between">
                                                 <div>
-                                                    <h6 class="my-0">@obj.Name</h6>
-                                                    <small class="text-muted"> @obj.ItemType.price</small>
+                                                    <h6 class="my-0">@Model.ItemList[i].Name</h6>
+                                                    <small class="text-muted"> @Model.ItemList[i].ItemType.price</small>
                                                 </div>
                                             </li>
                                         }

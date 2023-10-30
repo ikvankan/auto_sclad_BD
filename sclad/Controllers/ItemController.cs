@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using sclad.Data;
@@ -7,6 +8,7 @@ using sclad.Models.ViewModels;
 
 namespace sclad.Controllers
 {
+    [Authorize(Roles =WC.AdminRole)]
     public class ItemController : Controller
     {
         private readonly ApplicationDbContext _db;
