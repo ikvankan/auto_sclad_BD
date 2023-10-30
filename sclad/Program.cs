@@ -3,6 +3,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Localization;
 using System.Globalization;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
+using sclad.Utility;
 
 namespace sclad
 {
@@ -24,8 +26,10 @@ namespace sclad
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
             options.UseSqlServer(
                 builder.Configuration.GetConnectionString("Defaultconnection")));
-            builder.Services.AddIdentity<IdentityUser,IdentityRole>().AddDefaultTokenProviders().AddDefaultUI().AddEntityFrameworkStores<ApplicationDbContext>();
+            builder.Services.AddIdentity<IdentityUser,IdentityRole>().AddDefaultTokenProviders().AddDefaultUI()
+                .AddEntityFrameworkStores<ApplicationDbContext>();
 
+            builder.Services.AddTransient<IEmailSender, EmailSender>();
 
             var supportedCultures = new[] { new CultureInfo("en-US") };
             builder.Services.Configure<RequestLocalizationOptions>(options =>

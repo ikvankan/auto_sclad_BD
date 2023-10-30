@@ -50,7 +50,7 @@ namespace sclad.Controllers
 
 
 
-
+        //GET-SUMMARY
         public IActionResult Summary()
         {
             var claimsIdentity = (ClaimsIdentity)User.Identity;
@@ -80,6 +80,52 @@ namespace sclad.Controllers
 
             return View(ItemUserVM);
         }
+
+
+
+
+        //POST-SUMMARY
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [ActionName("Summary")]
+        public IActionResult SummaryPost(/*ItemUserVM temUserVM*/)//так как есть атрибут [BindProperty] оно доступно и так
+        {
+            var claimsIdentity = (ClaimsIdentity)User.Identity;
+            var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
+
+
+
+            List<ShoppingCart> shoppingCartList = new List<ShoppingCart>();
+            if (HttpContext.Session.Get<IEnumerable<ShoppingCart>>(WC.SessionCart).Count() > 0 &&
+                HttpContext.Session.Get<IEnumerable<ShoppingCart>>(WC.SessionCart).Count() != null)
+            {
+                shoppingCartList = HttpContext.Session.Get<List<ShoppingCart>>(WC.SessionCart);
+            }
+            List<int> itemInCart = shoppingCartList.Select(i => i.ItemId).ToList();
+            IEnumerable<Item> itemList = _db.Item.Where(u => itemInCart.Contains(u.Id));
+            foreach (var obj in itemList)
+            {
+                obj.ItemType = _db.ItemType.FirstOrDefault(u => u.Id == obj.ItemTypeId);
+                obj.Punkt = _db.Punkt.FirstOrDefault(u => u.Id == obj.PunktId);
+            }
+
+            ItemUserVM = new ItemUserVM()
+            {
+                ApplicationUser = _db.ApplicationUser.FirstOrDefault(u => u.Id == claim.Value),
+                ItemList = itemList
+            };
+
+            return View(ItemUserVM);
+        }
+
+
+
+        public IActionResult InquiryConfirmation()
+        {
+            HttpContext.Session.Clear();
+            return View();
+        }
+
 
 
 
