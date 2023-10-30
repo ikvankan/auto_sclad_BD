@@ -2,7 +2,9 @@
 using Microsoft.AspNetCore.Mvc;
 using sclad.Data;
 using sclad.Models;
+using sclad.Models.ViewModels;
 using sclad.Utility;
+using System.Security.Claims;
 
 namespace sclad.Controllers
 {
@@ -10,6 +12,8 @@ namespace sclad.Controllers
     public class CartController : Controller
     {
         private readonly ApplicationDbContext _db;
+        [BindProperty]
+        public ItemUserVM ItemUserVM { get; set; }
         public CartController(ApplicationDbContext db)
         {
             _db = db;
@@ -31,6 +35,52 @@ namespace sclad.Controllers
             }
             return View(itemList);
         }
+
+
+
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [ActionName("Index")]
+        public IActionResult IndexPost()
+        {
+            return RedirectToAction(nameof(Summary));
+        }
+
+
+
+
+
+        public IActionResult Summary()
+        {
+            var claimsIdentity = (ClaimsIdentity)User.Identity;
+            var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
+
+
+
+            List<ShoppingCart> shoppingCartList = new List<ShoppingCart>();
+            if (HttpContext.Session.Get<IEnumerable<ShoppingCart>>(WC.SessionCart).Count() > 0 &&
+                HttpContext.Session.Get<IEnumerable<ShoppingCart>>(WC.SessionCart).Count() != null)
+            {
+                shoppingCartList = HttpContext.Session.Get<List<ShoppingCart>>(WC.SessionCart);
+            }
+            List<int> itemInCart = shoppingCartList.Select(i => i.ItemId).ToList();
+            IEnumerable<Item> itemList = _db.Item.Where(u => itemInCart.Contains(u.Id));
+            foreach (var obj in itemList)
+            {
+                obj.ItemType = _db.ItemType.FirstOrDefault(u => u.Id == obj.ItemTypeId);
+                obj.Punkt = _db.Punkt.FirstOrDefault(u => u.Id == obj.PunktId);
+            }
+
+            ItemUserVM = new ItemUserVM()
+            {
+                ApplicationUser = _db.ApplicationUser.FirstOrDefault(u => u.Id == claim.Value),
+                ItemList = itemList
+            };
+
+            return View(ItemUserVM);
+        }
+
 
 
         public IActionResult Remove(int Id)
