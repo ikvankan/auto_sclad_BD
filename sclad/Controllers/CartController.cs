@@ -115,7 +115,7 @@ namespace sclad.Controllers
                 ItemList = itemList
             };
 
-            return View(ItemUserVM);
+            return RedirectToAction(nameof(InquiryConfirmation));
         }
 
 
