@@ -1,9 +1,7 @@
 ﻿@model sclad.Models.Item
-<div class="col-lg-12 col-md-12 p-0 m-0 filter @Model.ItemType.Name.Replace(' ','_')">
-    <table class=" table table-bordered table-striped" style="width:100%">
-        
-        <tbody>
-                <tr>
+
+
+    <tr class="filter @Model.ItemType.Name.Replace(' ','_')">
                     <td width="20%">@Model.Name</td>
                     <td width="10%">@Model.ItemType.price@("Р/КГ")</td>
                     <td width="25%"><span class="badge p-2 border w-100" style="background-color:lavenderblush;color:black">@Model.ItemType.Name</span></td>
@@ -11,7 +9,6 @@
                     <td class="text-center">
                     <a asp-action="Details" asp-route-id="@Model.Id" class="btn btn-dark form-control btn-sm p-2" style="height:40px">View Details</a>
                     </td>
-                </tr>
-        </tbody>
-    </table>
-</div>
+    </tr>
+
+

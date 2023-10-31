@@ -20,7 +20,7 @@
         }
     </div>
     <div class="row" style="display:none;">
-        <table class="p-0 m-0">
+        <table class="p-0 m-0 table table-bordered table-striped">
             <thead>
                 <tr>
                     <th>
@@ -39,23 +39,16 @@
                 </tr>
             </thead>
             <tbody >
-                <tr>
-                    <td width="20%"></td>
-                    <td width="10%"></td>
-                    <td width="25%"></td>
-                    <td width="25%"></td>
-                    <td class="text-center" width="20%">
-                    </td>
-                </tr>
+                @foreach (var item in Model.Items)
+                {
+                    <partial name="_ItemCart2" model="item" />
+                    //display vse tovari
+                    <br />
+                }
             </tbody>
         </table>
         
-        @foreach (var item in Model.Items)
-        {
-            <partial name="_ItemCart2" model="item" />
-            //display vse tovari
-            <br />
-        }
+        
     </div>
 </div>
 
