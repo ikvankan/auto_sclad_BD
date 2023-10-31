@@ -2,6 +2,7 @@
 
 <div class="container">
     <div class="text-center">
+        <button class="btn  btn-dark" id="btnToggle"> type</button>
         <button class="btn  btn-dark filter-button" data-filter="all">All</button>
             @foreach(var obj in Model.ItemTypes)
             {
@@ -16,6 +17,44 @@
         {
             <partial name="_ItemCart" model="item"/>
             //display vse tovari
+        }
+    </div>
+    <div class="row" style="display:none;">
+        <table class="p-0 m-0">
+            <thead>
+                <tr>
+                    <th>
+                        Наименование
+                    </th>
+                    <th>
+                        Цена
+                    </th>
+                    <th>
+                        Тип
+                    </th>
+                    <th>
+                        Пункт
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody >
+                <tr>
+                    <td width="20%"></td>
+                    <td width="10%"></td>
+                    <td width="25%"></td>
+                    <td width="25%"></td>
+                    <td class="text-center" width="20%">
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        
+        @foreach (var item in Model.Items)
+        {
+            <partial name="_ItemCart2" model="item" />
+            //display vse tovari
+            <br />
         }
     </div>
 </div>
@@ -35,8 +74,13 @@
                     $('.filter').filter('.' + value).show('3000');
 
                 }
-            });
+            });  
+        });
 
+        $(document).ready(function () {
+            $("#btnToggle").click(function () {
+                $(".row").toggle();
+            });
         });
     </script>
 }
