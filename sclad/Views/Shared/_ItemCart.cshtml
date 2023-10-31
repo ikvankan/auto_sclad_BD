@@ -1,5 +1,5 @@
 ﻿@model sclad.Models.Item
-<div class="col-lg-4 col-md-6 pb-4 filter @Model.ItemType.Name.Replace(' ','_')">
+<div class="col-lg-4 col-md-6 pb-4 filter @Model.ItemType.Name.Replace(' ','_') ">
     <!-- Card-->
     <div class="card bg-white rounded shadow-sm" style="border:1px solid #222">
         <div class="card-body px-3 pt-3 pb-1 row">
@@ -9,7 +9,7 @@
         <img class="card-img-top img-fluid d-block mx-auto mb-3" src="@WC.ImagePath@Model.Img" alt="Card image cap">
         <div class="card-body p-1 px-3 row">
             <div class="col-6">
-                <span class="badge p-2 border w-100" style="background-color:lavenderblush;color:black">@Model.ItemType.Name</span>
+                <span class="badge p-2 border w-100" style="background-color:lavenderblush;color:black;font-size:80%">@Model.ItemType.Name</span>
             </div>
             <div class="col-6 border-0">
                 <span class="badge p-2 border w-100" style="background-color:aliceblue;color:black">@Model.Punkt.Name</span>

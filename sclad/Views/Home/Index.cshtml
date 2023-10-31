@@ -2,20 +2,21 @@
 
 <div class="container">
     <div class="text-center">
+        <input type="text" id="search" placeholder="Поиск...">
         <button class="btn  btn-dark" id="btnToggle"> type</button>
         <button class="btn  btn-dark filter-button" data-filter="all">All</button>
-            @foreach(var obj in Model.ItemTypes)
-            {
-                <button class="btn btn-outline-secondary filter-button" data-filter="@obj.Name.Replace(' ','_')">
-                    @obj.Name
-                </button>
-            }
+        @foreach (var obj in Model.ItemTypes)
+        {
+            <button class="btn btn-outline-secondary filter-button" data-filter="@obj.Name.Replace(' ','_')">
+                @obj.Name
+            </button>
+        }
     </div>
     <br />
     <div class="row">
-        @foreach(var item in Model.Items)
+        @foreach (var item in Model.Items)
         {
-            <partial name="_ItemCart" model="item"/>
+            <partial name="_ItemCart" model="item" />
             //display vse tovari
         }
     </div>
@@ -38,7 +39,7 @@
                     <th></th>
                 </tr>
             </thead>
-            <tbody >
+            <tbody>
                 @foreach (var item in Model.Items)
                 {
                     <partial name="_ItemCart2" model="item" />
@@ -47,8 +48,6 @@
                 }
             </tbody>
         </table>
-        
-        
     </div>
 </div>
 
@@ -67,12 +66,21 @@
                     $('.filter').filter('.' + value).show('3000');
 
                 }
-            });  
+            });
         });
 
         $(document).ready(function () {
             $("#btnToggle").click(function () {
                 $(".row").toggle();
+            });
+        });
+
+        $(document).ready(function () {
+            $('#search').on('keyup', function () {
+                var value = $(this).val().toLowerCase();
+                $('.filter').filter(function () {
+                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                });
             });
         });
     </script>
