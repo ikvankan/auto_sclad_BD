@@ -6,6 +6,10 @@ namespace sclad.Models
 {
     public class Item
     {
+        public Item()
+        {
+            TempKol = 1;
+        }
         [Key]
         public int Id { get; set; }
         [DisplayName("Наименование")]
@@ -30,5 +34,8 @@ namespace sclad.Models
         [ForeignKey("PunktId")]
         public virtual Punkt Punkt { get; set; }
 
+        [NotMapped]
+        [Range(1,10000)]
+        public int TempKol { get; set; }
     }
 }

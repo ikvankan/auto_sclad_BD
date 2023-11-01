@@ -50,6 +50,42 @@
                                         <span asp-validation-for="ApplicationUser.Email" class="text-danger"></span>
                                     </div>
                                 </div>
+                                <div class="row my-1">
+                                    <div class="col-3">
+                                        <label>Улица</label>
+                                    </div>
+                                    <div class="col-9">
+                                        <input asp-for="ApplicationUser.StreetAdress" type="text" class="form-control" />
+                                        <span asp-validation-for="ApplicationUser.StreetAdress" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                <div class="row my-1">
+                                    <div class="col-3">
+                                        <label>Город</label>
+                                    </div>
+                                    <div class="col-9">
+                                        <input asp-for="ApplicationUser.City" type="text" class="form-control" />
+                                        <span asp-validation-for="ApplicationUser.City" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                <div class="row my-1">
+                                    <div class="col-3">
+                                        <label>Индекс</label>
+                                    </div>
+                                    <div class="col-9">
+                                        <input asp-for="ApplicationUser.PostalCode" type="text" class="form-control" />
+                                        <span asp-validation-for="ApplicationUser.PostalCode" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                <div class="row my-1">
+                                    <div class="col-3">
+                                        <label>Страна</label>
+                                    </div>
+                                    <div class="col-9">
+                                        <input asp-for="ApplicationUser.State" type="text" class="form-control" />
+                                        <span asp-validation-for="ApplicationUser.State" class="text-danger"></span>
+                                    </div>
+                                </div>
                             </div>
                             <div class="col-12 col-lg-5 row">
                                 <div class="col-12">
@@ -57,6 +93,9 @@
                                         <span class="text-info">Summary:</span>
                                     </h4>
                                     <ul class="list-group mb-3">
+                                        @{
+                                            decimal orderTotal = 0;
+                                        }
                                         @for(int i = 0; i < Model.ItemList.Count(); i++)
                                         {
                                         <input type="hidden" asp-for="@Model.ItemList[i].Name"/>
@@ -64,11 +103,17 @@
                                             <li class="list-group-item d-flex justify-content-between">
                                                 <div>
                                                     <h6 class="my-0">@Model.ItemList[i].Name</h6>
-                                                    <small class="text-muted"> @Model.ItemList[i].ItemType.price</small>
+                                                    <small class="text-muted">Кол: @Model.ItemList[i].TempKol</small>
+                                                    
                                                 </div>
+                                                <span class="text-muted">@(Model.ItemList[i].ItemType.price*Model.ItemList[i].TempKol)р</span>
                                             </li>
+                                            orderTotal += Model.ItemList[i].ItemType.price * Model.ItemList[i].TempKol;
                                         }
-                                        
+                                        <li class="list-group-item d-flex justify-content-between bg-light">
+                                            <small class="text-info">Итог:</small>
+                                            <strong class="text-info">@(orderTotal)р</strong>
+                                        </li>
                                     </ul>
                                 </div>
                             </div>
@@ -78,7 +123,7 @@
                 <div class="card-footer">
                     <div class="row">
                         <div class="col-12 col-md-5 offset-md-7">
-                            <button type="submit" class="btn btn-primary form-control">Submit Inquiry</button>
+                            <button class="btn btn-success form-control" id="submit-button">Сделать заказ</button>
                         </div>
                     </div>
                 </div>

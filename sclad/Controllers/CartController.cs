@@ -33,7 +33,15 @@ namespace sclad.Controllers
                 shoppingCartList = HttpContext.Session.Get<List<ShoppingCart>>(WC.SessionCart);
             }
             List<int> itemInCart = shoppingCartList.Select(i=>i.ItemId).ToList();
-            IEnumerable<Item> itemList = _db.Item.Where(u=>itemInCart.Contains(u.Id));
+            IEnumerable<Item> itemListTemp = _db.Item.Where(u=>itemInCart.Contains(u.Id));
+            IList<Item> itemList = new List<Item>();
+            
+            foreach(var item in shoppingCartList)
+            {
+                Item itemTemp= itemListTemp.FirstOrDefault(u=> u.Id == item.ItemId);
+                itemTemp.TempKol = item.Kol;
+                itemList.Add(itemTemp);
+            }
             foreach (var obj in itemList)
             {
                 obj.ItemType = _db.ItemType.FirstOrDefault(u => u.Id == obj.ItemTypeId);
@@ -48,8 +56,15 @@ namespace sclad.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [ActionName("Index")]
-        public IActionResult IndexPost()
+        public IActionResult IndexPost(IEnumerable<Item> ItemList)
         {
+            List<ShoppingCart> shoppingCartList = new List<ShoppingCart>();
+            foreach (Item item in ItemList)
+            {
+                shoppingCartList.Add(new ShoppingCart { ItemId = item.Id, Kol = item.TempKol });
+            }
+            HttpContext.Session.Set(WC.SessionCart, shoppingCartList);
+            
             return RedirectToAction(nameof(Summary));
         }
 
@@ -80,9 +95,15 @@ namespace sclad.Controllers
 
             ItemUserVM = new ItemUserVM()
             {
-                ApplicationUser = _db.ApplicationUser.FirstOrDefault(u => u.Id == claim.Value),
-                ItemList = itemList.ToList()
+                ApplicationUser = _db.ApplicationUser.FirstOrDefault(u => u.Id == claim.Value)
             };
+
+            foreach(var cartobj in shoppingCartList) 
+            {
+                Item ItemTemp = _db.Item.FirstOrDefault(u => u.Id == cartobj.ItemId);
+                ItemTemp.TempKol = cartobj.Kol;
+                ItemUserVM.ItemList.Add(ItemTemp);
+            }
 
             return View(ItemUserVM);
         }
@@ -152,6 +173,19 @@ namespace sclad.Controllers
             }
 
             shoppingCartList.Remove(shoppingCartList.Where(u=>u.ItemId == Id).FirstOrDefault());
+            HttpContext.Session.Set(WC.SessionCart, shoppingCartList);
+            return RedirectToAction(nameof(Index));
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult UpdateCart(IEnumerable<Item> ItemList)
+        {
+            List<ShoppingCart> shoppingCartList = new List<ShoppingCart>();
+            foreach(Item item in ItemList)
+            {
+                shoppingCartList.Add(new ShoppingCart { ItemId = item.Id,Kol=item.TempKol });
+            }
             HttpContext.Session.Set(WC.SessionCart, shoppingCartList);
             return RedirectToAction(nameof(Index));
         }

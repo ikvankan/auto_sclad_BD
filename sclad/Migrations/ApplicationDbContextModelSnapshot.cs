@@ -265,7 +265,7 @@ namespace sclad.Migrations
 
                     b.HasIndex("PunktId");
 
-                    b.ToTable("Item");
+                    b.ToTable("Item", (string)null);
                 });
 
             modelBuilder.Entity("sclad.Models.ItemType", b =>
@@ -289,7 +289,7 @@ namespace sclad.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("ItemType");
+                    b.ToTable("ItemType", (string)null);
                 });
 
             modelBuilder.Entity("sclad.Models.Punkt", b =>
@@ -314,7 +314,7 @@ namespace sclad.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Punkt");
+                    b.ToTable("Punkt", (string)null);
                 });
 
             modelBuilder.Entity("sclad.Models.ApplicationUser", b =>

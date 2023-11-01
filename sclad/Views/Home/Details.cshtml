@@ -31,7 +31,20 @@
 
                                         <p class="text-secondary">@Html.Raw(Model.Item.Discription)</p>
                                     </div>
-
+                                    <div class="col-12">
+                                        Количество:
+                                    </div>
+                                    <div class="col-12">
+                                        @if (Model.ExistInCart)
+                                        {
+                                            <input asp-for="@Model.Item.TempKol" disabled class="form-control " />
+                                        }
+                                        else
+                                        {
+                                            <input asp-for="@Model.Item.TempKol"  class="form-control " />
+                                        }
+                                        <span asp-validation-for="@Model.Item.TempKol" class="text-danger"></span>
+                                    </div>
                                 </div>
                             </div>
                         </div>

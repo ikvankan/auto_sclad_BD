@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Item>
+﻿@model List<Item>
 @if(Model.Count()>0){
 
 
@@ -22,11 +22,17 @@
                             <div class="row" style="color:#821f3d">
                                 <div class="col-lg-2">
                                 </div>
-                                <div class="col-12 col-lg-7">
+                                <div class="col-12 col-lg-3">
                                     Product Details
                                 </div>
                                 <div class="col-12 col-lg-2">
                                     Price per sqft
+                                </div>
+                                <div class="col-6 col-lg-2">
+                                    KOL
+                                </div>
+                                <div class="col-6 col-lg-2">
+                                    TotalCost
                                 </div>
                                 <div class="col-6 col-sm-4 col-lg-1">
                                 </div>
@@ -34,39 +40,61 @@
                         </div>
 
                         <hr />
-                        @foreach(var obj in Model)
+                            @{
+                                decimal OrderTotal = 0;
+                            }
+                        @for(int i = 0;i<Model.Count();i++)
                         {
+                            <input hidden asp-for="@Model[i].Id">
                             <div class="row h-100">
                                 <div class="col-4 col-md-2 text-center py-2">
-                                    <img src="@WC.ImagePath@obj.Img" class="rounded" width="100%" />
+                                    <img src="@WC.ImagePath@Model[i].Img" class="rounded" width="100%" />
                                 </div>
-                                <div class="col-5 col-lg-7">
-                                    <h5>@obj.Name</h5>
-                                    <div style="font-size:11px;">"@obj.Punkt.Name"</div>
+                                <div class="col-8 col-lg-3">
+                                        <h5>@Model[i].Name</h5>
+                                        <div style="font-size:11px;">"@Model[i].Punkt.Name"</div>
                                 </div>
                                 <div class="col-3 col-lg-2 pt-lg-4" style="font-size:11px;">
-                                        <span style="font-size:17px;">@obj.ItemType.price</span>Р/@obj.ItemType.Unit
+                                        <span style="font-size:17px;">@Model[i].ItemType.price</span>Р/@Model[i].ItemType.Unit
+
+                                </div>
+                                <div class="col-4 col-lg-2 pt-lg-4" style="font-size:11px;">
+                                        <input asp-for="@Model[i].TempKol" class="form-control">
+
+                                </div>
+                                <div class="col-3 col-lg-2 pt-lg-4" style="font-size:11px;">
+                                        <span style="font-size:17px;">@(Model[i].ItemType.price * Model[i].TempKol)</span>Р/@Model[i].ItemType.Unit
 
                                 </div>
                                 <div class="col-2 col-lg-1 p-0 pt-lg-4 text-center">
-                                    <a asp-action="Remove" asp-route-id="@obj.Id" class="btn btn-outline-danger">
+                                        <a asp-action="Remove" asp-route-id="@Model[i].Id" class="btn btn-outline-danger">
                                         <i class="fas fa-trash"></i>
                                     </a>
                                 </div>
+                                </div>
+                                OrderTotal = OrderTotal + (Model[i].ItemType.price * Model[i].TempKol);
+                            }
+                            <hr />
+                            <div class="row">
+                                <div class="col-12 text-end pr-4" style="color:#821f3d">
+                                    @string.Format("{0:c}",OrderTotal)
+                                </div>
                             </div>
-                        }
-
                         
                         
-                        <hr />
+                        
                     </div>
                     <div class="card-footer">
                         <div class="row">
-                            <div class="col-6 col-md-3 offset-md-9">
+                            <div class="col-6 col-md-3 offset-md-6">
+                                <input type="submit" asp-action="UpdateCart" formmethod="post" name="Update" value="Update Cart" class="btn btn-info form-control">
+                            </div>
+                            <div class="col-6 col-md-3">
                                 <button type="submit" class="btn btn-success form-control ">
                                     <span>Continue</span>
                                 </button>
                             </div>
+
                         </div>
                     </div>
                 </div>

@@ -61,14 +61,14 @@ namespace sclad.Controllers
 
         //POST-DETAILS
         [HttpPost,ActionName("Details")]
-        public IActionResult DetailsPost(int Id)
+        public IActionResult DetailsPost(int Id,DetailsVM detailsVM)
         {
             List<ShoppingCart> shoppingCartList = new List<ShoppingCart>();
             if (HttpContext.Session.Get<List<ShoppingCart>>(WC.SessionCart) != null&& HttpContext.Session.Get<List<ShoppingCart>>(WC.SessionCart).Count>0 )
             {
                 shoppingCartList = HttpContext.Session.Get<List<ShoppingCart>>(WC.SessionCart);
             }
-            shoppingCartList.Add(new ShoppingCart { ItemId = Id });
+            shoppingCartList.Add(new ShoppingCart { ItemId = Id, Kol=detailsVM.Item.TempKol });
             HttpContext.Session.Set(WC.SessionCart, shoppingCartList);
             return RedirectToAction(nameof(Index));
         }
