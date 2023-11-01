@@ -23,8 +23,12 @@
                         Item Type Name
                     </th>
                     <th>
+                        Unit
+                    </th>
+                    <th>
                         Price
                     </th>
+                    
                     <th></th>
                 </tr>
             </thead>
@@ -32,8 +36,9 @@
                 @foreach(var obj in Model)
                 {
                     <tr>
-                        <td width="50%">@obj.Name</td>
-                        <td width="30%">@obj.price</td>
+                        <td width="40%">@obj.Name</td>
+                        <td width="20%">@obj.Unit</td>
+                        <td width="20%">@obj.price</td>
                         <td class="text-center">
                             <div class="w-75 btn-group" role="group">
                                 <a asp-controller="ItemType" asp-route-Id="@obj.Id" asp-action="Edit" class="btn btn-primary ">
