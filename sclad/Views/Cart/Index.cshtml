@@ -13,7 +13,8 @@
                             <i class="fa fa-shopping-cart"></i> &nbsp;
                             Shopping Cart
                         </div>
-                        <div class="col-6 text-right">
+                        <div class="col-6 text-end">
+                            <a asp-action="Clear"  class="btn btn-outline-danger btn-sm">Очистить карзину</a>
                             <a asp-action="Index" asp-controller="Home" class="btn btn-outline-info btn-sm">Continue Shopping</a>
                         </div>
                     </div>
@@ -55,7 +56,7 @@
                                         <div style="font-size:11px;">"@Model[i].Punkt.Name"</div>
                                 </div>
                                 <div class="col-3 col-lg-2 pt-lg-4" style="font-size:11px;">
-                                        <span style="font-size:17px;">@Model[i].ItemType.price</span>Р/@Model[i].ItemType.Unit
+                                        <span style="font-size:17px;">@Model[i].Price</span>Р/@Model[i].ItemType.Unit
 
                                 </div>
                                 <div class="col-4 col-lg-2 pt-lg-4" style="font-size:11px;">
@@ -63,7 +64,7 @@
 
                                 </div>
                                 <div class="col-3 col-lg-2 pt-lg-4" style="font-size:11px;">
-                                        <span style="font-size:17px;">@(Model[i].ItemType.price * Model[i].TempKol)</span>Р/@Model[i].ItemType.Unit
+                                        <span style="font-size:17px;">@(Model[i].Price * Model[i].TempKol)</span>Р/@Model[i].ItemType.Unit
 
                                 </div>
                                 <div class="col-2 col-lg-1 p-0 pt-lg-4 text-center">
@@ -72,7 +73,7 @@
                                     </a>
                                 </div>
                                 </div>
-                                OrderTotal = OrderTotal + (Model[i].ItemType.price * Model[i].TempKol);
+                                OrderTotal = OrderTotal + (Model[i].Price * Model[i].TempKol);
                             }
                             <hr />
                             <div class="row">

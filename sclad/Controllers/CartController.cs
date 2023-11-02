@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Braintree;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using sclad.Data;
 using sclad.Models;
 using sclad.Models.ViewModels;
 using sclad.Utility;
+using sclad.Utility.BrainTree;
 using System.Security.Claims;
 using System.Text;
 
@@ -16,13 +18,15 @@ namespace sclad.Controllers
         private readonly ApplicationDbContext _db;
         private readonly IWebHostEnvironment _webHostEnvironment;
         private IEmailSender _emailSender;
+        private IBrainTreeGate _brain;
         [BindProperty]
         public ItemUserVM ItemUserVM { get; set; }
-        public CartController(ApplicationDbContext db, IWebHostEnvironment webHostEnvironment, IEmailSender emailSender)
+        public CartController(ApplicationDbContext db, IWebHostEnvironment webHostEnvironment, IEmailSender emailSender,IBrainTreeGate brain)
         {
             _db = db;
             _webHostEnvironment = webHostEnvironment;
             _emailSender = emailSender;
+            _brain = brain;
         }
         public IActionResult Index()
         {
@@ -74,6 +78,15 @@ namespace sclad.Controllers
         //GET-SUMMARY
         public IActionResult Summary()
         {
+
+            var gateway = _brain.GetGateway();
+            var clientToken = gateway.ClientToken.Generate();
+            ViewBag.ClientToken = clientToken;
+
+
+
+
+
             var claimsIdentity = (ClaimsIdentity)User.Identity;
             var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
 
@@ -115,8 +128,83 @@ namespace sclad.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [ActionName("Summary")]
-        public async Task<IActionResult> SummaryPost(/*ItemUserVM temUserVM*/)//так как есть атрибут [BindProperty] оно доступно и так
+        public async Task<IActionResult> SummaryPost(/*ItemUserVM temUserVM*/IFormCollection collection)//так как есть атрибут [BindProperty] оно доступно и так
         {
+
+            var claimsIdentity = (ClaimsIdentity)User.Identity;
+            var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
+
+
+            
+            //чето
+            decimal orderTotal = 0;
+            foreach(Item item in ItemUserVM.ItemList)
+            {
+                orderTotal += item.Price * item.TempKol;
+            }
+            OrderHeader orderHeader = new OrderHeader()
+            {
+                CreatedByUserId = claim.Value,
+                FinalOrderTotal = orderTotal,
+                City=ItemUserVM.ApplicationUser.City,
+                StreetAddress = ItemUserVM.ApplicationUser.StreetAdress,
+                State = ItemUserVM.ApplicationUser.State,
+                PostalCode = ItemUserVM.ApplicationUser.PostalCode,
+                FullName = ItemUserVM.ApplicationUser.FullName,
+                Email = ItemUserVM.ApplicationUser.Email,
+                PhoneNumber = ItemUserVM.ApplicationUser.PhoneNumber,
+                OrderDate = DateTime.Now,
+                OrderStatus = WC.StatusPending
+            };
+            _db.OrderHeader.Add(orderHeader);
+            _db.SaveChanges();
+
+            foreach(var item in ItemUserVM.ItemList)
+            {
+                OrderDetail orderDetail = new OrderDetail()
+                {
+                    OrderHeaderId = orderHeader.Id,
+                    PricePerKol = item.Price,
+                    Kol = item.TempKol,
+                    ItemId = item.Id
+                };
+                _db.OrderDetail.Add(orderDetail);
+            }
+            _db.SaveChanges();
+
+            string nonceFromTheClient = collection["payment_method_nonce"];
+
+            var request = new TransactionRequest
+            {
+                Amount = Convert.ToDecimal(orderHeader.FinalOrderTotal),
+                PaymentMethodNonce = nonceFromTheClient,
+                OrderId = orderHeader.Id.ToString(),
+                Options = new TransactionOptionsRequest
+                {
+                    SubmitForSettlement = true
+                }
+            };
+            var gateway = _brain.GetGateway();
+            Result<Transaction> result = gateway.Transaction.Sale(request);
+
+            if(result.Target.ProcessorResponseText == "Approved")
+            {
+                orderHeader.TransactionId = result.Target.Id;
+                orderHeader.OrderStatus = WC.StatusApproved;
+            }
+            else
+            {
+                orderHeader.OrderStatus = WC.StatusCancelled;
+            }
+            _db.SaveChanges();
+            return RedirectToAction(nameof(InquiryConfirmation), new {id = orderHeader.Id});
+
+
+
+            //чето кончилось
+
+
+
             var PathToTemplate = _webHostEnvironment.WebRootPath + Path.DirectorySeparatorChar.ToString()
                 + "templates" + Path.DirectorySeparatorChar.ToString() +
                 "Inquiry.html";
@@ -154,10 +242,11 @@ namespace sclad.Controllers
 
 
 
-        public IActionResult InquiryConfirmation()
+        public IActionResult InquiryConfirmation(int id)
         {
+            OrderHeader orderHeader = _db.OrderHeader.FirstOrDefault(u=>u.Id == id);
             HttpContext.Session.Clear();
-            return View();
+            return View(orderHeader);
         }
 
 
@@ -188,6 +277,14 @@ namespace sclad.Controllers
             }
             HttpContext.Session.Set(WC.SessionCart, shoppingCartList);
             return RedirectToAction(nameof(Index));
+        }
+
+
+        public IActionResult Clear()
+        {
+            
+            HttpContext.Session.Clear();
+            return RedirectToAction("Index","Home");
         }
     }
 }

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using sclad.Data;
 
@@ -11,9 +12,10 @@ using sclad.Data;
 namespace sclad.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231102170845_fix")]
+    partial class fix
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -309,11 +311,14 @@ namespace sclad.Migrations
                     b.Property<decimal>("PricePerKol")
                         .HasColumnType("decimal(18,2)");
 
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
-                    b.HasIndex("ItemId");
-
                     b.HasIndex("OrderHeaderId");
+
+                    b.HasIndex("ProductId");
 
                     b.ToTable("OrderDetail");
                 });
@@ -492,15 +497,15 @@ namespace sclad.Migrations
 
             modelBuilder.Entity("sclad.Models.OrderDetail", b =>
                 {
-                    b.HasOne("sclad.Models.Item", "Item")
-                        .WithMany()
-                        .HasForeignKey("ItemId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("sclad.Models.OrderHeader", "OrderHeader")
                         .WithMany()
                         .HasForeignKey("OrderHeaderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("sclad.Models.Item", "Item")
+                        .WithMany()
+                        .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

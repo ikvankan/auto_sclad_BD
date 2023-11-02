@@ -5,6 +5,10 @@ using System.Globalization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using sclad.Utility;
+using sclad.Utility.BrainTree;
+using Microsoft.Extensions.Configuration;
+using Braintree;
+
 
 namespace sclad
 {
@@ -15,6 +19,7 @@ namespace sclad
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
+            
             builder.Services.AddControllersWithViews();
             builder.Services.AddHttpContextAccessor();
             builder.Services.AddSession(Options =>
@@ -23,6 +28,8 @@ namespace sclad
                 Options.Cookie.HttpOnly = true;
                 Options.Cookie.IsEssential = true;
             });
+            builder.Services.Configure<BrainTreeSettings>(builder.Configuration.GetSection("Braintree"));
+            builder.Services.AddSingleton<IBrainTreeGate, BrainTreeGate>();
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
             options.UseSqlServer(
                 builder.Configuration.GetConnectionString("Defaultconnection")));

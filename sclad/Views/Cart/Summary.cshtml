@@ -1,6 +1,6 @@
 ﻿@model sclad.Models.ViewModels.ItemUserVM
 
-<form method="post">
+<form method="post" id="payment-form">
     <br />
     <div class="backgroundWhiteBorder">
         <div class="container">
@@ -10,8 +10,8 @@
                         <i class="fa fa-shopping-cart"></i> &nbsp;
                         Order Summary
                     </div>
-                    <div class="col-6 text-right">
-                        <a class="btn btn-outline-info btn-sm">Back to Cart</a>
+                    <div class="col-6 text-end">
+                        <a asp-action="Index" asp-controller="Cart" class="btn btn-outline-info btn-sm">Back to Cart</a>
                     </div>
                 </div>
                 <div class="card-body">
@@ -100,21 +100,31 @@
                                         {
                                         <input type="hidden" asp-for="@Model.ItemList[i].Name"/>
                                             <input type="hidden" asp-for="@Model.ItemList[i].Id" />
+                                            <input type="hidden" asp-for="@Model.ItemList[i].Price" />
+                                            <input type="hidden" asp-for="@Model.ItemList[i].TempKol" />
                                             <li class="list-group-item d-flex justify-content-between">
                                                 <div>
                                                     <h6 class="my-0">@Model.ItemList[i].Name</h6>
                                                     <small class="text-muted">Кол: @Model.ItemList[i].TempKol</small>
                                                     
                                                 </div>
-                                                <span class="text-muted">@(Model.ItemList[i].ItemType.price*Model.ItemList[i].TempKol)р</span>
+                                                <span class="text-muted">@(Model.ItemList[i].Price*Model.ItemList[i].TempKol)р</span>
                                             </li>
-                                            orderTotal += Model.ItemList[i].ItemType.price * Model.ItemList[i].TempKol;
+                                            orderTotal += Model.ItemList[i].Price * Model.ItemList[i].TempKol;
                                         }
                                         <li class="list-group-item d-flex justify-content-between bg-light">
                                             <small class="text-info">Итог:</small>
                                             <strong class="text-info">@(orderTotal)р</strong>
                                         </li>
                                     </ul>
+                                </div>
+                                <div class="col-12">
+                                    <div class="wrapper">
+                                        <div class="checkout container">
+                                            <div id="dropin-container"></div>
+                                            <input id="nonce" name="payment_method_nonce" type="hidden"/>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -135,4 +145,21 @@
 
 @section Scripts{
     <partial name="_ValidationScriptsPartial" />
+    <script src="https://js.braintreegateway.com/web/dropin/1.40.2/js/dropin.min.js"></script>
+    <script>
+        var client_token = "@ViewBag.ClientToken";
+        var form = document.querySelector('#payment-form');
+        braintree.dropin.create({
+            authorization: client_token,
+            container:'#dropin-container'
+        }, function(createErr, instance) {
+            form.addEventListener('submit',function (){
+                event.preventDefault();
+                instance.requestPaymentMethod(function(err, payload){
+                    document.querySelector('#nonce').value = payload.nonce;
+                    form.submit();
+                });
+            });
+        });
+    </script>
 }

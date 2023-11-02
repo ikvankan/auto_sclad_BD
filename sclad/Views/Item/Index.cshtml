@@ -20,16 +20,19 @@
             <thead>
                 <tr>
                     <th>
-                        Item  Name
+                        Наименование
                     </th>
                     <th>
-                        Item Weight
+                        Вес
                     </th>
                     <th>
-                        Item Type
+                        Цена/ед.
                     </th>
                     <th>
-                        Item Punkt
+                        Тип
+                    </th>
+                    <th>
+                        Пункт
                     </th>
                     <th></th>
                 </tr>
@@ -38,8 +41,9 @@
                 @foreach (var obj in Model)
                 {
                     <tr>
-                        <td width="30%">@obj.Name</td>
+                        <td width="20%">@obj.Name</td>
                         <td width="10%">@obj.Weight</td>
+                        <td width="10%">@obj.Price</td>
                         <td width="20%">@obj.ItemType.Name</td>
                         <td width="20%">@obj.Punkt.Name</td>
                         <td class="text-center">

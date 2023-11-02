@@ -3,7 +3,7 @@
 
     <tr class="filter @Model.ItemType.Name.Replace(' ','_')">
                     <td width="20%">@Model.Name</td>
-                    <td width="10%">@Model.ItemType.price@("Р/")@Model.ItemType.Unit</td>
+                    <td width="10%">@Model.Price@("Р/")@Model.ItemType.Unit</td>
                     <td width="25%"><span class="badge p-2 border w-100" style="background-color:lavenderblush;color:black">@Model.ItemType.Name</span></td>
                     <td width="25%"><span class="badge p-2 border w-100" style="background-color:aliceblue;color:black">@Model.Punkt.Name</span></td>
                     <td class="text-center">

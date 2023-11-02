@@ -14,5 +14,7 @@ namespace sclad.Data
         public DbSet<Punkt> Punkt { get; set; }
         public DbSet<Item> Item { get; set; }
         public DbSet<ApplicationUser> ApplicationUser { get; set; }
+        public DbSet<OrderHeader> OrderHeader { get; set; }
+        public DbSet<OrderDetail> OrderDetail { get; set; }
     }
 }

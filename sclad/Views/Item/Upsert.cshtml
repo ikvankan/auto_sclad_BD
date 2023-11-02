@@ -39,24 +39,15 @@
                 </div>
                 <div class="mb-3 row">
                     <div class="col-4">
-                        <label asp-for="Item.TotalCost"></label>
+                        <label asp-for="Item.Price"></label>
                     </div>
                     <div class="col-8">
-                        <input type="number" asp-for="Item.TotalCost" class="form-control" />
-                        <span asp-validation-for="Item.TotalCost" class="text-danger"></span>
+                        <input type="number" asp-for="Item.Price" class="form-control" />
+                        <span asp-validation-for="Item.Price" class="text-danger"></span>
                     </div>
 
                 </div>
-                <div class="mb-3 row">
-                    <div class="col-4">
-                        <label asp-for="Item.ItemByUser"></label>
-                    </div>
-                    <div class="col-8">
-                        <input asp-for="Item.ItemByUser" class="form-control" />
-                        <span asp-validation-for="Item.ItemByUser" class="text-danger"></span>
-                    </div>
-
-                </div>
+                
                 <div class="mb-3 row">
                     <div class="col-4">
                         <label asp-for="Item.Discription"></label>
@@ -64,6 +55,16 @@
                     <div class="col-8">
                         <textarea asp-for="Item.Discription" class="form-control summernote"></textarea>
                         <span asp-validation-for="Item.Discription" class="text-danger"></span>
+                    </div>
+
+                </div>
+                <div class="mb-3 row">
+                    <div class="col-4">
+                        <label asp-for="Item.ShortDesc"></label>
+                    </div>
+                    <div class="col-8">
+                        <textarea asp-for="Item.ShortDesc" class="form-control summernote"></textarea>
+                        <span asp-validation-for="Item.ShortDesc" class="text-danger"></span>
                     </div>
 
                 </div>
