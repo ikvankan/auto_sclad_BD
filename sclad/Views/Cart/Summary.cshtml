@@ -105,7 +105,7 @@
                                             <li class="list-group-item d-flex justify-content-between">
                                                 <div>
                                                     <h6 class="my-0">@Model.ItemList[i].Name</h6>
-                                                    <small class="text-muted">Кол: @Model.ItemList[i].TempKol</small>
+                                                    <small class="text-muted">Кол: @Model.ItemList[i].TempKol @(Model.ItemList[i].ItemType.Unit)</small>
                                                     
                                                 </div>
                                                 <span class="text-muted">@(Model.ItemList[i].Price*Model.ItemList[i].TempKol)р</span>

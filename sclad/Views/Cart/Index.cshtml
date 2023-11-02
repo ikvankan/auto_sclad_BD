@@ -15,7 +15,7 @@
                         </div>
                         <div class="col-6 text-end">
                             <a asp-action="Clear"  class="btn btn-outline-danger btn-sm">Очистить карзину</a>
-                            <a asp-action="Index" asp-controller="Home" class="btn btn-outline-info btn-sm">Continue Shopping</a>
+                            <a asp-action="Index" asp-controller="Home" class="btn btn-outline-info btn-sm">На главную</a>
                         </div>
                     </div>
                     <div class="card-body">
@@ -24,16 +24,16 @@
                                 <div class="col-lg-2">
                                 </div>
                                 <div class="col-12 col-lg-3">
-                                    Product Details
+                                    Детали
                                 </div>
                                 <div class="col-12 col-lg-2">
-                                    Price per sqft
+                                    Цена за еденицу
                                 </div>
                                 <div class="col-6 col-lg-2">
-                                    KOL
+                                    Количество
                                 </div>
                                 <div class="col-6 col-lg-2">
-                                    TotalCost
+                                    Итог
                                 </div>
                                 <div class="col-6 col-sm-4 col-lg-1">
                                 </div>
@@ -64,7 +64,7 @@
 
                                 </div>
                                 <div class="col-3 col-lg-2 pt-lg-4" style="font-size:11px;">
-                                        <span style="font-size:17px;">@(Model[i].Price * Model[i].TempKol)</span>Р/@Model[i].ItemType.Unit
+                                        <span style="font-size:17px;">@(Model[i].Price * Model[i].TempKol)</span>Р
 
                                 </div>
                                 <div class="col-2 col-lg-1 p-0 pt-lg-4 text-center">
@@ -78,7 +78,7 @@
                             <hr />
                             <div class="row">
                                 <div class="col-12 text-end pr-4" style="color:#821f3d">
-                                    @string.Format("{0:c}",OrderTotal)
+                                    @(OrderTotal)р
                                 </div>
                             </div>
                         
@@ -92,7 +92,7 @@
                             </div>
                             <div class="col-6 col-md-3">
                                 <button type="submit" class="btn btn-success form-control ">
-                                    <span>Continue</span>
+                                    <span>Продолжить</span>
                                 </button>
                             </div>
 
