@@ -1,4 +1,6 @@
-﻿namespace sclad
+﻿using System.Collections.ObjectModel;
+
+namespace sclad
 {
     public static class WC
     {
@@ -17,5 +19,13 @@
         public const string StatusShipped = "Shipped";
         public const string StatusCancelled = "Cancelled";
         public const string StatusRefunded = "Refunded";
+
+
+
+        public static readonly IEnumerable<string> ListStatus = new ReadOnlyCollection<string>(
+            new List<string>
+            {
+                StatusApproved,StatusCancelled,StatusInProcess,StatusPending,StatusRefunded,StatusShipped
+            });
     }
 }
