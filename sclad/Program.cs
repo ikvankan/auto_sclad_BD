@@ -38,6 +38,12 @@ namespace sclad
 
             builder.Services.AddTransient<IEmailSender, EmailSender>();
 
+            builder.Services.AddAuthentication().AddGoogle(options =>
+            {
+                options.ClientId = "965777046602-pm3oljbc4ka7c09t7ua9bal83hdkvsq5.apps.googleusercontent.com";
+                options.ClientSecret = "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";
+            });
+
             var supportedCultures = new[] { new CultureInfo("en-US") };
             builder.Services.Configure<RequestLocalizationOptions>(options =>
             {
