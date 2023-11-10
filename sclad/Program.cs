@@ -52,7 +52,8 @@ namespace sclad
                 options.SupportedUICultures = supportedCultures;
             });
 
-            
+            Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("OTcyNTg1QDMyMzAyZTM0MmUzMExLREhia2NIM0loNjc3T1gwRWxJN3k2Z2pYZVZvcmw1SXBUTlllNHhjSjg9");
+
             var app = builder.Build();
             app.UseRequestLocalization();
 
