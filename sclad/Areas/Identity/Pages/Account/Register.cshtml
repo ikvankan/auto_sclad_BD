@@ -1,5 +1,6 @@
 ﻿@page
 @model RegisterModel
+@using sclad.Utility
 
 
 <div class="py-4">
@@ -65,28 +66,32 @@
                             }
                         </div>
                     </form>
-                    <hr />
-                    <form id="external-account" asp-page="./ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl" method="post" class="form-horizontal">
-                        <div class="row">
-                            <p>
-                                @foreach (var provider in Model.ExternalLogins)
-                                {
-                                    @if (provider.Name.ToLower().Contains("google"))
+                    
+                    @if (!User.IsInRole(sclad.WC.AdminRole))
+                    {
+                        <hr />
+                        <form id="external-account" asp-page="./ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl" method="post" class="form-horizontal">
+                            <div class="row">
+                                <p>
+                                    @foreach (var provider in Model.ExternalLogins)
                                     {
-                                        <button type="submit" class="btn btn-block facebook-btn form-control"
-                                                name="provider" value="@provider.Name"
-                                                title="Log in using your @provider.DisplayName account">
-                                            <i class="fa-brands fa-google"></i>
-                                        </button>
+                                        @if (provider.Name.ToLower().Contains("google"))
+                                        {
+                                            <button type="submit" class="btn btn-block facebook-btn form-control"
+                                            name="provider" value="@provider.Name"
+                                            title="Log in using your @provider.DisplayName account">
+                                                <i class="fa-brands fa-google"></i>
+                                            </button>
+                                        }
+                                        else
+                                        {
+                                            <button type="submit" class="btn btn-danger w-100" name="provider" value="@provider.Name" title="Log in using your @provider.DisplayName account">@provider.DisplayName</button>
+                                        }
                                     }
-                                    else
-                                    {
-                                        <button type="submit" class="btn btn-danger w-100" name="provider" value="@provider.Name" title="Log in using your @provider.DisplayName account">@provider.DisplayName</button>
-                                    }
-                                }
-                            </p>
-                        </div>
-                    </form>
+                                </p>
+                            </div>
+                        </form>
+                    }
                 </div>
             </div>
         </div>
