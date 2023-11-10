@@ -12,6 +12,8 @@ namespace sclad
 
         public const string EmailAdmin = "testpochtadlyavsego@gmail.com";
 
+        public const string Success = "Success";
+        public const string Error = "Error";
 
         public const string StatusPending = "Pending";
         public const string StatusApproved = "Approved";

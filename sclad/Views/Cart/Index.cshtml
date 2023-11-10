@@ -61,11 +61,11 @@
                                 </div>
                                 <div class="col-4 col-lg-2 pt-lg-4" style="font-size:11px;">
                                         <input asp-for="@Model[i].TempKol" class="form-control">
-
+                                        <span asp-validation-for="@Model[i].TempKol" class="text-danger"></span>
                                 </div>
                                 <div class="col-3 col-lg-2 pt-lg-4" style="font-size:11px;">
                                         <span style="font-size:17px;">@(Model[i].Price * Model[i].TempKol)</span>Р
-
+                                        
                                 </div>
                                 <div class="col-2 col-lg-1 p-0 pt-lg-4 text-center">
                                         <a asp-action="Remove" asp-route-id="@Model[i].Id" class="btn btn-outline-danger">
@@ -107,3 +107,7 @@
 else{
     <p>В корзине нет товаров!</p>
 }
+
+@section Scripts{
+    <partial name="_ValidationScriptsPartial" />
+         }

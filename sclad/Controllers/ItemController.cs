@@ -96,6 +96,7 @@ namespace sclad.Controllers
                 itemVM.Item.Img = fileName + extension;
 
                 _db.Item.Add(itemVM.Item);
+                TempData[WC.Success] = "Предмет создан успешно!";
             }
             else
             {
@@ -125,6 +126,7 @@ namespace sclad.Controllers
                     itemVM.Item.Img = objFromDb.Img;
                 }
                 _db.Item.Update(itemVM.Item);
+                TempData[WC.Success] = "Предмет изменён успешно!";
             }
 
 
@@ -162,6 +164,7 @@ namespace sclad.Controllers
             }
 
             _db.Item.Remove(obj);
+            TempData[WC.Success] = "Предмет удалён успешно!";
             _db.SaveChanges();
             return RedirectToAction("Index");
         }

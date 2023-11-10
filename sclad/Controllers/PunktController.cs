@@ -32,6 +32,7 @@ namespace sclad.Controllers
         {
             _db.Punkt.Add(obj);
             _db.SaveChanges();
+            TempData[WC.Success] = "Пункт создан успешно!";
             return RedirectToAction("Index");
         }
 
@@ -51,6 +52,7 @@ namespace sclad.Controllers
         {
             _db.Punkt.Update(obj);
             _db.SaveChanges();
+            TempData[WC.Success] = "Пункт изменён успешно!";
             return RedirectToAction("Index");
         }
 
@@ -73,6 +75,7 @@ namespace sclad.Controllers
             if (obj == null) { return NotFound(); }
             _db.Punkt.Remove(obj);
             _db.SaveChanges();
+            TempData[WC.Success] = "Пункт удалён успешно!";
             return RedirectToAction("Index");
         }
     }

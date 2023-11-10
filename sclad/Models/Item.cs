@@ -31,7 +31,7 @@ namespace sclad.Models
         public virtual Punkt Punkt { get; set; }
 
         [NotMapped]
-        [Range(1,10000)]
+        [Range(1,10000,ErrorMessage ="Колчество не может быть равным нулю")]
         public int TempKol { get; set; }
         [DisplayName("Цена")]
         [Range(0, 9999999999999999.99, ErrorMessage = "Значение либо меньше нули либо слишком большое")]

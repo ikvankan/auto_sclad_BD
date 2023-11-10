@@ -32,6 +32,7 @@ namespace sclad.Controllers
         {
             _db.ItemType.Add(obj);
             _db.SaveChanges();
+            TempData[WC.Success] = "Тип создан успешно!";
             return RedirectToAction("Index");
         }
 
@@ -51,6 +52,7 @@ namespace sclad.Controllers
         {
             _db.ItemType.Update(obj);
             _db.SaveChanges();
+            TempData[WC.Success] = "Тип изменён успешно!";
             return RedirectToAction("Index");
         }
 
@@ -73,6 +75,7 @@ namespace sclad.Controllers
             if (obj == null) { return NotFound(); }
             _db.ItemType.Remove(obj);
             _db.SaveChanges();
+            TempData[WC.Success] = "Тип удалён успешно!";
             return RedirectToAction("Index");
         }
     }
