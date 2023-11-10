@@ -133,7 +133,7 @@
                 <div class="card-footer">
                     <div class="row">
                         <div class="col-12 col-md-5 offset-md-7">
-                            <button class="btn btn-success form-control" id="submit-button">Сделать заказ</button>
+                            <button class="btn btn-success form-control" onclick="return validateInput()" id="submit-button">Сделать заказ</button>
                         </div>
                     </div>
                 </div>
@@ -161,5 +161,32 @@
                 });
             });
         });
+
+
+
+
+        function validateInput(){
+            var app_name = document.getElementById("ApplicationUser_FullName").value;
+            var app_email = document.getElementById("ApplicationUser_Email").value;
+            var app_phone = document.getElementById("ApplicationUser_PhoneNumber").value;
+            var app_street = document.getElementById("ApplicationUser_StreetAdress").value;
+            var app_city = document.getElementById("ApplicationUser_City").value;
+            var app_postal = document.getElementById("ApplicationUser_PostalCode").value;
+            var app_state = document.getElementById("ApplicationUser_State").value;
+
+            if (app_name.toString() == '' || app_email.toString() == '' || app_phone.toString() == '' || app_street.toString() == '' || app_city.toString() == '' || app_postal.toString() == '' || app_state.toString() == '') {
+                Swal.fire({
+                    icon: "error",
+                    title: "Пустые поля",
+                    text: "Пожалуйста, введите все поля!",
+                    
+                });
+                return false;
+            }
+            else{
+                
+                return true;
+            }
+        }
     </script>
 }
